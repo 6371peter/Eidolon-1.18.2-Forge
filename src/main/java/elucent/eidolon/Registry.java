@@ -264,12 +264,16 @@ public class Registry {
         return BlockBehaviour.Properties.of(mat, color);
     }
 
-    /*
     public static class DecoBlockPack {
         DeferredRegister<Block> registry;
         String basename;
         BlockBehaviour.Properties props;
-        RegistryObject<Block> full = null, slab = null, stair = null, wall = null, fence = null,
+        RegistryObject<Block>
+                full = null,
+                slab = null,
+                stair = null,
+                wall = null,
+                fence = null,
                 fence_gate = null;
 
         public DecoBlockPack(DeferredRegister<Block> blocks, String basename, BlockBehaviour.Properties props) {
@@ -280,16 +284,22 @@ public class Registry {
             slab = BLOCKS.register(basename + "_slab", () -> new SlabBlock(props));
             stair = BLOCKS.register(basename + "_stairs",
                     () -> new StairBlock(() -> full.get().defaultBlockState(), props));
+            registrerBlockItem(basename, full);
+            registrerBlockItem(basename + "_slab", slab);
+            registrerBlockItem(basename + "_stairs", stair);
         }
 
         public DecoBlockPack addWall() {
             wall = BLOCKS.register(basename + "_wall", () -> new WallBlock(props));
+            registrerBlockItem(basename + "_wall", wall);
             return this;
         }
 
         public DecoBlockPack addFence() {
             fence = BLOCKS.register(basename + "_fence", () -> new FenceBlock(props));
             fence = BLOCKS.register(basename + "_fence_gate", () -> new FenceGateBlock(props));
+            registrerBlockItem(basename + "_fence", fence);
+            registrerBlockItem(basename + "_fence_gate", fence);
             return this;
         }
 
@@ -312,7 +322,11 @@ public class Registry {
         public Block getFence() {
             return fence.get();
         }
-    }*/
+    }
+
+    private static <T extends Block> RegistryObject<Item> registrerBlockItem(String name, RegistryObject<T> block) {
+        return ITEMS.register(name, () -> new BlockItem(block.get(), itemProps()));
+    }
 
     static <T extends Entity> RegistryObject<EntityType<T>> addEntity(String name, float width, float height, EntityType.EntityFactory<T> factory, MobCategory kind) {
         return ENTITIES.register(name, () -> EntityType.Builder.<T>of(factory, kind)
@@ -726,7 +740,7 @@ public class Registry {
                     () -> new CisternBlock(blockProps(Material.GLASS, MaterialColor.COLOR_LIGHT_BLUE)
                             .sound(SoundType.GLASS).strength(1.5f, 1.5f).noOcclusion())
                             .setShape(Shapes.box(0.0625, 0, 0.0625, 0.9375, 1, 0.9375)));
-    /*
+
     public static DecoBlockPack SMOOTH_STONE_BRICK = new DecoBlockPack(BLOCKS, "smooth_stone_bricks",
             blockProps(Material.STONE, MaterialColor.STONE)
                     .sound(SoundType.STONE).requiresCorrectToolForDrops().strength(2.0f, 3.0f))
@@ -752,7 +766,6 @@ public class Registry {
                             .sound(SoundType.STONE).requiresCorrectToolForDrops().strength(2.4f, 3.0f)),
             BONE_PILE = new DecoBlockPack(BLOCKS, "bone_pile", blockProps(Material.STONE, MaterialColor.QUARTZ)
                     .sound(SoundType.DEEPSLATE).requiresCorrectToolForDrops().strength(1.6f, 3.0f));
-                    */
     public static RegistryObject<Block> POLISHED_WOOD_PILLAR = BLOCKS.register("polished_wood_pillar",
             () -> new RotatedPillarBlock(blockProps(Material.WOOD, MaterialColor.WOOD)
                     .strength(1.6f, 3.0f))),
