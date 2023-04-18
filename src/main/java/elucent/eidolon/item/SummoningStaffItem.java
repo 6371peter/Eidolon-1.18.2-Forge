@@ -67,7 +67,6 @@ public class SummoningStaffItem extends ItemBase {
     
     Random random = new Random();
 
-	// 客户端粒子效果
     @Override
     public void onUsingTick(ItemStack stack, LivingEntity entity, int time) {
     	if (entity.level.isClientSide) {
@@ -94,7 +93,6 @@ public class SummoningStaffItem extends ItemBase {
     	}
     }
 
-	// 释放生物
     @Override
     public void releaseUsing(ItemStack stack, Level level, LivingEntity entity, int time) {
     	if ((72000 - time) >= 20 && hasCharges(stack)) {

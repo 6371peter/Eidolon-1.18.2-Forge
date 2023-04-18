@@ -523,7 +523,7 @@ public class Registry {
                     .setLore("lore.eidolon.withered_heart")),
             IMBUED_BONES = ITEMS.register("imbued_bones", () -> new Item(itemProps().rarity(Rarity.UNCOMMON))),
             SUMMONING_STAFF = ITEMS.register("summoning_staff", () ->
-                    new SummoningStaffItem(itemProps().rarity(Rarity.RARE))),
+                    new SummoningStaffItem(itemProps().rarity(Rarity.RARE).stacksTo(1))),
             DEATHBRINGER_SCYTHE = ITEMS.register("deathbringer_scythe", () ->
                     new DeathbringerScytheItem(itemProps().rarity(Rarity.RARE))
                             .setLore("lore.eidolon.deathbringer_scythe")),
