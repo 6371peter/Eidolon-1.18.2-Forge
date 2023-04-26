@@ -7,26 +7,9 @@ import java.util.function.Supplier;
 
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 
-import elucent.eidolon.block.BlockBase;
-import elucent.eidolon.block.BrazierBlock;
+import elucent.eidolon.block.*;
 import elucent.eidolon.block.CandleBlock;
-import elucent.eidolon.block.CandlestickBlock;
-import elucent.eidolon.block.CisternBlock;
-import elucent.eidolon.block.CrucibleBlock;
-import elucent.eidolon.block.EffigyBlock;
-import elucent.eidolon.block.EnchantedAshBlock;
-import elucent.eidolon.block.GobletBlock;
-import elucent.eidolon.block.HandBlock;
-import elucent.eidolon.block.HerbBlockBase;
-import elucent.eidolon.block.NecroticFocusBlock;
-import elucent.eidolon.block.PillarBlockBase;
 import elucent.eidolon.block.PipeBlock;
-import elucent.eidolon.block.ResearchTableBlock;
-import elucent.eidolon.block.SoulEnchanterBlock;
-import elucent.eidolon.block.TableBlockBase;
-import elucent.eidolon.block.TwoHighBlockBase;
-import elucent.eidolon.block.WoodenStandBlock;
-import elucent.eidolon.block.WorktableBlock;
 import elucent.eidolon.capability.IKnowledge;
 import elucent.eidolon.capability.IPlayerData;
 import elucent.eidolon.capability.IReputation;
@@ -143,17 +126,10 @@ import elucent.eidolon.tile.SoulEnchanterTileRenderer;
 import elucent.eidolon.tile.WoodenStandTileEntity;
 import elucent.eidolon.tile.reagent.CisternTileEntity;
 import elucent.eidolon.tile.reagent.PipeTileEntity;
+import elucent.eidolon.world.tree.IllwoodTreeGrower;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.BushBlock;
-import net.minecraft.world.level.block.FenceBlock;
-import net.minecraft.world.level.block.FenceGateBlock;
-import net.minecraft.world.level.block.RotatedPillarBlock;
-import net.minecraft.world.level.block.SlabBlock;
-import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.StairBlock;
-import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
 import net.minecraft.ChatFormatting;
@@ -236,7 +212,15 @@ public class Registry {
             new ResourceLocation("forge", "ingots/silver"));
     public static final TagKey<Item> GEMS_SHADOW = TagKey.create(net.minecraft.core.Registry.ITEM_REGISTRY,
             new ResourceLocation("forge", "gems/shadow_gem"));
-
+    public static final TagKey<Item> RAW_MATERIALS_LEAD = TagKey.create(net.minecraft.core.Registry.ITEM_REGISTRY,
+            new ResourceLocation("forge", "raw_materials/lead"));
+    public static final TagKey<Item> RAW_MATERIALS_SILVER = TagKey.create(net.minecraft.core.Registry.ITEM_REGISTRY,
+            new ResourceLocation("forge", "raw_materials/silver"));
+    public static final TagKey<Item> ORES_LEAD = TagKey.create(net.minecraft.core.Registry.ITEM_REGISTRY,
+            new ResourceLocation("forge", "ores/lead"));
+    public static final TagKey<Item> ORES_SILVER = TagKey.create(net.minecraft.core.Registry.ITEM_REGISTRY,
+            new ResourceLocation("forge", "ores/silver"));
+    
     static Map<String, Block> BLOCK_MAP = new HashMap<>();
     static Map<String, Item> ITEM_MAP = new HashMap<>();
     static DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, Eidolon.MODID);
@@ -703,23 +687,23 @@ public class Registry {
                     () -> new HerbBlockBase(blockProps(Material.PLANT, MaterialColor.GRASS)
                             .sound(SoundType.GRASS).noOcclusion())),
             ILLWOOD_SAPLING = BLOCKS.register("illwood_sapling",
-                    () -> new BushBlock(blockProps(Material.PLANT, MaterialColor.GRASS)
-                            .sound(SoundType.GRASS).noOcclusion().noCollission())),
+                    () -> new SaplingBlock(new IllwoodTreeGrower(), BlockBehaviour.Properties.copy(Blocks.OAK_SAPLING).sound(SoundType.GRASS).noOcclusion().noCollission()
+                    )),
             ILLWOOD_LEAVES = BLOCKS.register("illwood_leaves",
                     () -> new BlockBase(blockProps(Material.PLANT, MaterialColor.GRASS)
                             .sound(SoundType.GRASS).noOcclusion())),
-            ILLWOOD_LOG = BLOCKS.register("illwood_log",
-                    () -> new RotatedPillarBlock(blockProps(Material.WOOD, MaterialColor.WOOD)
-                            .sound(SoundType.WOOD).strength(1.6f, 3.0f))),
-            ILLWOOD_BARK = BLOCKS.register("illwood_bark",
-                    () -> new RotatedPillarBlock(blockProps(Material.WOOD, MaterialColor.WOOD)
-                            .sound(SoundType.WOOD).strength(1.6f, 3.0f))),
             STRIPPED_ILLWOOD_LOG = BLOCKS.register("stripped_illwood_log",
                     () -> new RotatedPillarBlock(blockProps(Material.WOOD, MaterialColor.WOOD)
                             .sound(SoundType.WOOD).strength(1.4f, 3.0f))),
+            ILLWOOD_LOG = BLOCKS.register("illwood_log",
+                    () -> new IllWoodBlock(blockProps(Material.WOOD, MaterialColor.WOOD)
+                            .sound(SoundType.WOOD).strength(1.6f, 3.0f), STRIPPED_ILLWOOD_LOG)),
             STRIPPED_ILLWOOD_BARK = BLOCKS.register("stripped_illwood_bark",
                     () -> new RotatedPillarBlock(blockProps(Material.WOOD, MaterialColor.WOOD)
                             .sound(SoundType.WOOD).strength(1.4f, 3.0f))),
+            ILLWOOD_BARK = BLOCKS.register("illwood_bark",
+                    () -> new IllWoodBlock(blockProps(Material.WOOD, MaterialColor.WOOD)
+                            .sound(SoundType.WOOD).strength(1.6f, 3.0f), STRIPPED_ILLWOOD_BARK)),
             SOUL_ENCHANTER = BLOCKS.register("soul_enchanter",
                     () -> new SoulEnchanterBlock(blockProps(Material.STONE, MaterialColor.PODZOL)
                             .sound(SoundType.STONE).strength(5.0f, 1200.0f)
