@@ -690,8 +690,9 @@ public class Registry {
                     () -> new SaplingBlock(new IllwoodTreeGrower(), BlockBehaviour.Properties.copy(Blocks.OAK_SAPLING).sound(SoundType.GRASS).noOcclusion().noCollission()
                     )),
             ILLWOOD_LEAVES = BLOCKS.register("illwood_leaves",
-                    () -> new BlockBase(blockProps(Material.PLANT, MaterialColor.GRASS)
-                            .sound(SoundType.GRASS).noOcclusion())),
+                    () -> new LeavesBlock(
+                            BlockBehaviour.Properties.copy(Blocks.OAK_LEAVES).sound(SoundType.GRASS).noOcclusion()
+                    )),
             STRIPPED_ILLWOOD_LOG = BLOCKS.register("stripped_illwood_log",
                     () -> new RotatedPillarBlock(blockProps(Material.WOOD, MaterialColor.WOOD)
                             .sound(SoundType.WOOD).strength(1.4f, 3.0f))),
