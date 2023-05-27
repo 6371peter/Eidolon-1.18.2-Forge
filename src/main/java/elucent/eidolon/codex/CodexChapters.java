@@ -46,11 +46,20 @@ public class CodexChapters {
             "eidolon.codex.chapter.ores",
             new TitlePage("eidolon.codex.page.ores.lead_ore"),
             new SmeltingPage(new ItemStack(Registry.LEAD_INGOT.get()), new ItemStack(Registry.LEAD_ORE.get())),
+            new SmeltingPage(new ItemStack(Registry.LEAD_INGOT.get()), new ItemStack(Registry.RAW_LEAD.get())),
             new CraftingPage(new ItemStack(Registry.LEAD_BLOCK.get()),
                 new ItemStack(Registry.LEAD_INGOT.get()), new ItemStack(Registry.LEAD_INGOT.get()), new ItemStack(Registry.LEAD_INGOT.get()),
                 new ItemStack(Registry.LEAD_INGOT.get()), new ItemStack(Registry.LEAD_INGOT.get()), new ItemStack(Registry.LEAD_INGOT.get()),
                 new ItemStack(Registry.LEAD_INGOT.get()), new ItemStack(Registry.LEAD_INGOT.get()), new ItemStack(Registry.LEAD_INGOT.get())),
-            new CraftingPage(new ItemStack(Registry.LEAD_NUGGET.get(), 9), new ItemStack(Registry.LEAD_INGOT.get()))
+            new CraftingPage(new ItemStack(Registry.LEAD_NUGGET.get(), 9), new ItemStack(Registry.LEAD_INGOT.get())),
+                new TitlePage("eidolon.codex.page.ores.silver_ore"),
+                new SmeltingPage(new ItemStack(Registry.SILVER_INGOT.get()), new ItemStack(Registry.SILVER_ORE.get())),
+                new SmeltingPage(new ItemStack(Registry.SILVER_INGOT.get()), new ItemStack(Registry.RAW_SILVER.get())),
+                new CraftingPage(new ItemStack(Registry.SILVER_BLOCK.get()),
+                        new ItemStack(Registry.SILVER_INGOT.get()), new ItemStack(Registry.SILVER_INGOT.get()), new ItemStack(Registry.SILVER_INGOT.get()),
+                        new ItemStack(Registry.SILVER_INGOT.get()), new ItemStack(Registry.SILVER_INGOT.get()), new ItemStack(Registry.SILVER_INGOT.get()),
+                        new ItemStack(Registry.SILVER_INGOT.get()), new ItemStack(Registry.SILVER_INGOT.get()), new ItemStack(Registry.SILVER_INGOT.get())),
+                new CraftingPage(new ItemStack(Registry.SILVER_NUGGET.get(), 9), new ItemStack(Registry.SILVER_INGOT.get()))
         );
 
         PEWTER = new Chapter(

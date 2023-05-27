@@ -339,6 +339,8 @@
   "eidolon.codex.chapter.ores": "Ores",
     "eidolon.codex.page.ores.lead_ore.title": "Lead",
     "eidolon.codex.page.ores.lead_ore": "Lead is a mundane metal that can be found underground. It appears with a depth and rarity similar to gold.",
+    "eidolon.codex.page.ores.silver_ore.title": "Silver",
+    "eidolon.codex.page.ores.silver_ore": "Silver is a rare metal that can be found underground. It appears with a depth and rarity similar to gold.",
   "eidolon.codex.chapter.pewter": "Pewter",
     "eidolon.codex.page.pewter.title": "Pewter",
     "eidolon.codex.page.pewter": "Pewter is a lead-based alloy useful for many magical constructs. It is completely inert to magical processes, making it an excellent structural metal for various devices and arcane objects.",
