@@ -8,6 +8,9 @@ import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 public class Config {
 	// generic
 	public static ConfigValue<Integer> CRUCIBLE_STEP_DURATION, MAX_ETHEREAL_HEALTH;
+
+    // Test Function
+    public static ConfigValue<Boolean> SIN_RUNE, CRIMSON_ROSE_RUNE, SOUL_RUNE, HOLY_RUNE;
 	
     // mobs
     public static ConfigValue<Integer> WRAITH_SPAWN_WEIGHT, ZOMBIE_BRUTE_SPAWN_WEIGHT, RAVEN_SPAWN_WEIGHT,
@@ -75,6 +78,16 @@ public class Config {
         CATACOMB_RARITY = builder.comment("Rarity of the catacomb structure. Higher numbers mean rarer structures.")
             .defineInRange("catacombRarity", 3.0f, 1.0f, 1000f);
         builder.pop();
+
+        builder.comment("Test Function settings").push("test");
+        SIN_RUNE = builder.comment("Whether Sin Rune could unlock in survival mode.\n"
+                        + "When player unlock Wicked Sign,throw Ars Ecclesia to a Zombie,wait for a while for zombies to drop it before picking it up.")
+                .define("sinRuneEnable", true);
+        HOLY_RUNE = builder.comment("Whether Holy Rune register and could unlock in survival mode.\n"
+                        + "When player unlock Sacred Sign,When Ritual of Purify cure Zombified Villager,put Ars Ecclesia into a Necrotic Focus.")
+                .define("holyRuneEnable", true);
+        builder.pop();
+
     }
 
     public static final Config INSTANCE;

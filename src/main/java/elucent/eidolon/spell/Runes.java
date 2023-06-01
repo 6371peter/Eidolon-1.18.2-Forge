@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import elucent.eidolon.Config;
 import elucent.eidolon.Eidolon;
 import net.minecraft.resources.ResourceLocation;
 
@@ -41,7 +42,7 @@ public class Runes {
 			}
 		});
 		// Soul Rune
-		// TODO:change register name
+		// TODO:更改名字
 		register(new Rune(new ResourceLocation(Eidolon.MODID, "soul")) {
 			@Override
 			public RuneResult doEffect(SignSequence seq) {
@@ -50,6 +51,16 @@ public class Runes {
 					return RuneResult.PASS;
 				}
 				return RuneResult.FAIL;
+			}
+		});
+
+		// Holy Rune
+		// TODO:更改名字
+		if (Config.HOLY_RUNE.get()) register(new Rune(new ResourceLocation(Eidolon.MODID, "holy")) {
+			@Override
+			public RuneResult doEffect(SignSequence seq) {
+				seq.addRight(Signs.SACRED_SIGN);
+				return RuneResult.PASS;
 			}
 		});
 	}

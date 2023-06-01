@@ -15,6 +15,7 @@ import elucent.eidolon.capability.KnowledgeCommand;
 import elucent.eidolon.entity.ZombieBruteEntity;
 import elucent.eidolon.entity.ai.PriestBarterGoal;
 import elucent.eidolon.entity.ai.WitchBarterGoal;
+import elucent.eidolon.entity.ai.ZombieBarterGoal;
 import elucent.eidolon.event.StuckInBlockEvent;
 import elucent.eidolon.item.BonelordArmorItem;
 import elucent.eidolon.item.CleavingAxeItem;
@@ -28,6 +29,7 @@ import elucent.eidolon.network.SoulUpdatePacket;
 import elucent.eidolon.network.WingsDataUpdatePacket;
 import elucent.eidolon.research.Research;
 import elucent.eidolon.ritual.Ritual;
+import elucent.eidolon.spell.Runes;
 import elucent.eidolon.spell.Signs;
 import elucent.eidolon.tile.GobletTileEntity;
 import elucent.eidolon.util.EntityUtil;
@@ -284,6 +286,13 @@ public class Events {
                     (Villager)event.getEntity(),
                     (stack) -> stack.getItem() == Registry.CODEX.get(),
                     (stack) -> CodexItem.withSign(stack, Signs.SACRED_SIGN)
+                ));
+            }
+            if (Config.SIN_RUNE.get() && event.getEntity() instanceof Zombie) {
+                ((Zombie)event.getEntity()).goalSelector.addGoal(1, new ZombieBarterGoal(
+                        (Zombie)event.getEntity(),
+                        (stack) -> stack.getItem() == Registry.CODEX.get(),
+                        (stack) -> CodexItem.withRune(stack, Runes.find(new ResourceLocation(Eidolon.MODID, "sin")))
                 ));
             }
         }

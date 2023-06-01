@@ -6,6 +6,9 @@ import elucent.eidolon.spell.Runes;
 import elucent.eidolon.spell.Sign;
 import elucent.eidolon.spell.Signs;
 import elucent.eidolon.util.KnowledgeUtil;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.protocol.game.ClientboundSetActionBarTextPacket;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -39,11 +42,37 @@ public class CodexItem extends ItemBase implements IManaRelatedItem {
             Sign sign = Signs.find(loc);
             if (sign != null) KnowledgeUtil.grantSign(entity, sign);
         }
+        // Add Rune
+        if (!world.isClientSide && stack.hasTag() && stack.getTag().contains("rune")) {
+            ResourceLocation loc = new ResourceLocation(stack.getTag().getString("rune"));
+            stack.getTag().remove("rune");
+            Rune rune = Runes.find(loc);
+            if (rune != null) {
+                // Unlock Sin Rune Need Player know Wicked Sign
+                // TODO:翻译文件更新
+                if (entity instanceof Player && rune == Runes.find(new ResourceLocation(Eidolon.MODID, "sin"))) {
+                    if (KnowledgeUtil.knowsSign((Player) entity, Signs.WICKED_SIGN)) KnowledgeUtil.grantRune(entity, rune);
+                    else ((ServerPlayer)entity).connection.send(new ClientboundSetActionBarTextPacket(new TranslatableComponent("eidolon.title.miss_wicked_sign")));
+                }
+                // Holy Rune Need Player Unlock SACRED Sign first
+                // TODO:翻译文件更新
+                if (entity instanceof Player && rune == Runes.find(new ResourceLocation(Eidolon.MODID, "holy"))) {
+                    if (KnowledgeUtil.knowsSign((Player) entity, Signs.SACRED_SIGN)) KnowledgeUtil.grantRune(entity, rune);
+                    else ((ServerPlayer)entity).connection.send(new ClientboundSetActionBarTextPacket(new TranslatableComponent("eidolon.title.miss_sacred_sign")));
+                }
+            }
+        }
     }
 
     public static ItemStack withSign(ItemStack stack, Sign sign) {
         ItemStack newStack = stack.copy();
         newStack.getOrCreateTag().putString("sign", sign.getRegistryName().toString());
+        return newStack;
+    }
+
+    public static ItemStack withRune(ItemStack stack, Rune rune) {
+        ItemStack newStack = stack.copy();
+        newStack.getOrCreateTag().putString("rune", rune.getRegistryName().toString());
         return newStack;
     }
 }
