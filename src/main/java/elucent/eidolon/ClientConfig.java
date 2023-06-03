@@ -13,6 +13,10 @@ public class ClientConfig {
     public static ForgeConfigSpec.ConfigValue<Boolean> BETTER_LAYERING;
     // ui
     public static ForgeConfigSpec.ConfigValue<String> MANA_BAR_POSITION, MANA_BAR_ORIENTATION;
+
+    // Test Function
+    // UI function
+    public static ForgeConfigSpec.ConfigValue<Boolean> CLASSIC_ETHEREAL_BAR;
     
     public static class Positions {
     	public static final String BOTTOM_LEFT = "bottomLeft",
@@ -45,6 +49,8 @@ public class ClientConfig {
         	.defineInList("manaBarPosition", "top", Positions.VALUES);
         MANA_BAR_ORIENTATION = builder.comment("Orientation of the magic power meter.")
         	.defineInList("manaBarOrientation", "default", Orientations.VALUES);
+        CLASSIC_ETHEREAL_BAR = builder.comment("Enable classic bar and disable normal ethereal bar.\n" + "Need Classical Bar Mod.")
+                .define("enableClassicEtherealBar", true);
         builder.pop();
     }
 
