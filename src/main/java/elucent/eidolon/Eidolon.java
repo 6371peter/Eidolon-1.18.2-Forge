@@ -1,7 +1,6 @@
 package elucent.eidolon;
 
 import elucent.eidolon.codex.CodexChapters;
-import elucent.eidolon.compat.classicbar.EtherealClassicBars;
 import elucent.eidolon.gui.ResearchTableScreen;
 import elucent.eidolon.gui.SoulEnchanterScreen;
 import elucent.eidolon.gui.WoodenBrewingStandScreen;
@@ -43,7 +42,6 @@ import net.minecraftforge.client.gui.OverlayRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.InterModComms;
-import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
@@ -51,7 +49,8 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import tfar.classicbar.EventHandler;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import top.theillusivec4.curios.api.SlotTypeMessage;
 import top.theillusivec4.curios.api.SlotTypePreset;
 
@@ -60,6 +59,8 @@ public class Eidolon {
     public static ISidedProxy proxy = DistExecutor.unsafeRunForDist(() -> ClientProxy::new, () -> ServerProxy::new);
 
     public static final String MODID = "eidolon";
+
+    public static final Logger LOGGER = LogManager.getLogger();
 
     public static final CreativeModeTab TAB = new CreativeModeTab(MODID) {
         @Override
@@ -90,7 +91,6 @@ public class Eidolon {
         DistExecutor.unsafeCallWhenOn(Dist.CLIENT, () -> () -> {
             MinecraftForge.EVENT_BUS.register(new ClientEvents());
             FMLJavaModLoadingContext.get().getModEventBus().register(new ClientRegistry());
-            if (ModList.get().isLoaded("classicbar")) EventHandler.register(new EtherealClassicBars());
             return new Object();
         });
     }

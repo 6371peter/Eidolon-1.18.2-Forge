@@ -383,7 +383,6 @@ public class ClientRegistry {
 		@Override
 		public void render(ForgeIngameGui gui, PoseStack mStack, float partialTicks, int width, int height) {
 			if (!gui.shouldDrawSurvivalElements()) return;
-			if (ModList.get().isLoaded("classicbar") && ClientConfig.CLASSIC_ETHEREAL_BAR.get() ) return;
 	        Minecraft mc = Minecraft.getInstance();
 	        LocalPlayer player = mc.player;
             mStack.pushPose();
