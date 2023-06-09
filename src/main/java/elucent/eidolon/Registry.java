@@ -193,7 +193,6 @@ import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
@@ -281,9 +280,9 @@ public class Registry {
 
         public DecoBlockPack addFence() {
             fence = BLOCKS.register(basename + "_fence", () -> new FenceBlock(props));
-            fence = BLOCKS.register(basename + "_fence_gate", () -> new FenceGateBlock(props));
+            fence_gate = BLOCKS.register(basename + "_fence_gate", () -> new FenceGateBlock(props));
             registrerBlockItem(basename + "_fence", fence);
-            registrerBlockItem(basename + "_fence_gate", fence);
+            registrerBlockItem(basename + "_fence_gate", fence_gate);
             return this;
         }
 
