@@ -1,6 +1,7 @@
 package elucent.eidolon.spell;
 
 import java.util.List;
+import java.util.Map;
 
 import elucent.eidolon.Eidolon;
 import elucent.eidolon.Registry;
@@ -8,10 +9,16 @@ import elucent.eidolon.capability.IReputation;
 import elucent.eidolon.deity.Deities;
 import elucent.eidolon.network.MagicBurstEffectPacket;
 import elucent.eidolon.network.Networking;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TextColor;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.EntityDamageSource;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.RecordItem;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
@@ -22,6 +29,14 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class DarkTouchSpell extends StaticSpell {
     public static final String NECROTIC_KEY = new ResourceLocation(Eidolon.MODID, "necrotic").toString();
@@ -29,37 +44,42 @@ public class DarkTouchSpell extends StaticSpell {
     public DarkTouchSpell(ResourceLocation name, Sign... signs) {
         super(name, signs);
 
-//        MinecraftForge.EVENT_BUS.addListener(DarkTouchSpell::onHurt);
-//        DistExecutor.unsafeCallWhenOn(Dist.CLIENT, () -> () -> {
-//            MinecraftForge.EVENT_BUS.addListener(DarkTouchSpell::tooltip);
-//            return new Object();
-//        });
+        MinecraftForge.EVENT_BUS.addListener(DarkTouchSpell::onHurt);
+        DistExecutor.unsafeCallWhenOn(Dist.CLIENT, () -> () -> {
+            MinecraftForge.EVENT_BUS.addListener(DarkTouchSpell::tooltip);
+            return new Object();
+        });
     }
 
-//    @SubscribeEvent
-//    public static void onHurt(LivingHurtEvent event) {
-//        if (event.getSource().getDamageType() != DamageSource.WITHER.getDamageType()
-//            && event.getSource().getTrueSource() instanceof LivingEntity
-//            && ((LivingEntity)event.getSource().getTrueSource()).getHeldItemMainhand().hasTag()
-//            && ((LivingEntity)event.getSource().getTrueSource()).getHeldItemMainhand().getTag().contains(NECROTIC_KEY)) {
-//            float amount = Math.min(1, event.getAmount());
-//            event.setAmount(event.getAmount() - amount);
-//            if (event.getAmount() <= 0) event.setCanceled(true);
-//            int prevHurtResist = event.getEntityLiving().hurtResistantTime;
-//            if (event.getEntityLiving().attackEntityFrom(new EntityDamageSource(DamageSource.WITHER.getDamageType(), event.getSource().getTrueSource()), amount)) {
-//                if (event.getEntityLiving().getHealth() <= 0) event.setCanceled(true);
-//                else event.getEntityLiving().hurtResistantTime = prevHurtResist;
-//            }
-//        }
-//    }
-//
-//    @OnlyIn(Dist.CLIENT)
-//    @SubscribeEvent
-//    public static void tooltip(ItemTooltipEvent event) {
-//        if (event.getItemStack().hasTag() && event.getItemStack().getTag().contains(NECROTIC_KEY)) {
-//            event.getToolTip().add(new TranslationTextComponent("eidolon.tooltip.necrotic").mergeStyle(TextFormatting.DARK_BLUE));
-//        }
-//    }
+      @SubscribeEvent
+      public static void onHurt(LivingHurtEvent event) {
+        if (!event.getSource().equals(DamageSource.WITHER)
+                && event.getSource().getEntity() instanceof LivingEntity
+                && ((LivingEntity)event.getSource().getEntity()).getMainHandItem().hasTag()
+                && ((LivingEntity)event.getSource().getEntity()).getMainHandItem().getTag().contains(NECROTIC_KEY)) {
+            float amount = Math.min(1, event.getAmount());
+            event.setAmount(event.getAmount() - amount);
+            if (event.getAmount() <= 0) event.setCanceled(true);
+            int prevHurtResist = event.getEntityLiving().hurtTime;
+              /*if (event.getEntityLiving().attackEntityFrom(new EntityDamageSource(DamageSource.WITHER.toString(), event.getSource().getEntity()), amount)) {
+                  if (event.getEntityLiving().getHealth() <= 0) event.setCanceled(true);
+                  else event.getEntityLiving().hurtTime = prevHurtResist;
+              }*/
+            DamageSource damageSource = new EntityDamageSource(DamageSource.WITHER.toString(), event.getSource().getEntity());
+            if (event.getEntityLiving().hurt(damageSource, amount)) {
+                if (event.getEntityLiving().getHealth() <= 0) event.setCanceled(true);
+                else event.getEntityLiving().hurtTime = prevHurtResist;
+            }
+        }
+    }
+
+      @OnlyIn(Dist.CLIENT)
+      @SubscribeEvent
+      public static void tooltip(ItemTooltipEvent event) {
+         if (event.getItemStack().hasTag() && event.getItemStack().getTag().contains(NECROTIC_KEY)) {
+              event.getToolTip().add(new TranslatableComponent("eidolon.tooltip.necrotic").withStyle(ChatFormatting.DARK_BLUE));
+          }
+      }
 
     @Override
     public boolean canCast(Level world, BlockPos pos, Player player) {
@@ -75,24 +95,41 @@ public class DarkTouchSpell extends StaticSpell {
     }
 
     boolean canTouch(ItemStack stack) {
-        return stack.getItem() == Registry.PEWTER_INLAY.get()             // is pewter
-               || stack.getItem() == Items.BLACK_WOOL
-               || (stack.getItem() instanceof RecordItem && stack.getItem() != Registry.PAROUSIA_DISC.get());
-            // || (stack.isDamageable() && stack.getMaxStackSize() == 1); // is tool
+        // Json
+        for (Map<String, ResourceLocation> map : SpellReloadListener.SPELL) {
+            ResourceLocation spell = map.get("spell");
+            if (!spell.equals(Spells.DARK_TOUCH.getRegistryName())) return false;
+            ResourceLocation input = map.get("input");
+            Item inputItem = ForgeRegistries.ITEMS.getValue(input);
+            if (inputItem != null && stack.getItem() == inputItem) return true;
+        }
+        // DISC
+        if (stack.getItem() instanceof RecordItem && stack.getItem() != Registry.PAROUSIA_DISC.get()) return true;
+        // Tool
+        if (stack.isDamageableItem() && stack.getMaxStackSize() == 1) return true;
+        return false;
     }
 
-    ItemStack touchResult(ItemStack stack) { // assumes canTouch is true
-        if (stack.getItem() == Registry.PEWTER_INLAY.get())
-            return new ItemStack(Registry.UNHOLY_SYMBOL.get());
-        else if (stack.getItem() == Items.BLACK_WOOL)
-            return new ItemStack(Registry.TOP_HAT.get());
-        else if (stack.getItem() instanceof RecordItem && stack.getItem() != Registry.PAROUSIA_DISC.get())
-            return new ItemStack(Registry.PAROUSIA_DISC.get());
-//        else {
-//            stack.getOrCreateTag().putBoolean(NECROTIC_KEY, true);
-//            return stack;
-//        }
-        else return stack;
+    ItemStack touchResult(ItemStack stack) {
+        for (Map<String, ResourceLocation> map : SpellReloadListener.SPELL) {
+            ResourceLocation spell = map.get("spell");
+            if (!spell.equals(Spells.DARK_TOUCH.getRegistryName())) return stack;
+            ResourceLocation input = map.get("input");
+            ResourceLocation output = map.get("output");
+            if (input != null && output != null) {
+                Item inputItem = ForgeRegistries.ITEMS.getValue(input);
+                Item outputItem = ForgeRegistries.ITEMS.getValue(output);
+                if (inputItem != null && stack.getItem() == inputItem) return new ItemStack(outputItem);
+            }
+        }
+        // DISC
+        if (stack.getItem() instanceof RecordItem && stack.getItem() != Registry.PAROUSIA_DISC.get()) return new ItemStack(Registry.PAROUSIA_DISC.get());
+        // Tool create Necrotic tag
+        else if (stack.isDamageableItem() && stack.getMaxStackSize() == 1) {
+            stack.getOrCreateTag().putBoolean(NECROTIC_KEY, true);
+            return  stack;
+        }
+        return stack;
     }
 
     @Override

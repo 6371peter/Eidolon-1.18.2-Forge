@@ -1,0 +1,7 @@
+{
+  "spell": "eidolon:dark_touch",
+  "input": {
+    "item":"minecraft:black_wool"
+  },
+  "output": "eidolon:top_hat"
+}
