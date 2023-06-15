@@ -26,7 +26,7 @@
   "lore.eidolon.withered_heart": "It feels hollow in your hand.",
   "lore.eidolon.grape_candy": "Grim Grape",
   "lore.eidolon.red_candy": "Reaping Raspberry",
-  "lore.eidolon.enervating_ring": " ",
+  "lore.eidolon.enervating_ring": "WIP",
 
   "item.eidolon.lead_ingot": "Lead Ingot",
   "item.eidolon.raw_lead": "Raw Lead",
@@ -586,6 +586,9 @@
   "eidolon.codex.chapter.mind_sign": "Mind Sign",
     "eidolon.codex.page.mind_sign.title": "Mind Sign",
     "eidolon.codex.page.mind_sign": "The mind is what separates intelligent beings from the world's other creatures. It is only with the mind, and the use of the mind sign, that complex magic becomes possible for the mortal practitioner.",
+  "eidolon.codex.chapter.flame_sign": "Flame Sign",
+    "eidolon.codex.page.flame_sign.title": "Flame Sign",
+    "eidolon.codex.page.flame_sign": "WIP.",
   "eidolon.codex.category.signs": "Mystical Signs",
   
   "eidolon.codex.rune.sin": "A vile and wicked sigil. Adds one Wicked sign to the end of the spell.",
