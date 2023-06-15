@@ -22,17 +22,15 @@ import elucent.eidolon.item.CleavingAxeItem;
 import elucent.eidolon.item.CodexItem;
 import elucent.eidolon.item.ReaperScytheItem;
 import elucent.eidolon.item.WarlockRobesItem;
-import elucent.eidolon.network.CrystallizeEffectPacket;
-import elucent.eidolon.network.KnowledgeUpdatePacket;
-import elucent.eidolon.network.Networking;
-import elucent.eidolon.network.SoulUpdatePacket;
-import elucent.eidolon.network.WingsDataUpdatePacket;
+import elucent.eidolon.network.*;
 import elucent.eidolon.research.Research;
 import elucent.eidolon.ritual.Ritual;
 import elucent.eidolon.spell.Runes;
 import elucent.eidolon.spell.Signs;
 import elucent.eidolon.tile.GobletTileEntity;
 import elucent.eidolon.util.EntityUtil;
+import elucent.eidolon.util.KnowledgeUtil;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -63,6 +61,10 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.DoublePlantBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.core.BlockPos;
@@ -81,15 +83,12 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.TickEvent.PlayerTickEvent;
 import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.event.entity.living.LivingDropsEvent;
-import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
+import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
-import net.minecraftforge.event.entity.living.PotionEvent;
 import net.minecraftforge.event.entity.living.PotionEvent.PotionAddedEvent;
 import net.minecraftforge.event.entity.living.PotionEvent.PotionApplicableEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -145,9 +144,8 @@ public class Events {
     }
 
     @SubscribeEvent
-    public void onTarget(LivingSetAttackTargetEvent event) {
-        if (EntityUtil.isEnthralledBy(event.getEntityLiving(), event.getTarget()))
-            ((Mob)event.getEntityLiving()).setTarget(null);
+    public void onTarget(LivingChangeTargetEvent event) {
+        if (EntityUtil.isEnthralledBy(event.getEntityLiving(), event.getNewTarget()))  event.setCanceled(true);
     }
 
     @SubscribeEvent
@@ -288,7 +286,7 @@ public class Events {
                     (stack) -> CodexItem.withSign(stack, Signs.SACRED_SIGN)
                 ));
             }
-            if (Config.SIN_RUNE.get() && event.getEntity() instanceof Zombie) {
+            if (event.getEntity() instanceof Zombie) {
                 ((Zombie)event.getEntity()).goalSelector.addGoal(1, new ZombieBarterGoal(
                         (Zombie)event.getEntity(),
                         (stack) -> stack.getItem() == Registry.CODEX.get(),
@@ -377,6 +375,38 @@ public class Events {
         if (event.getStuckMultiplier().length() < 1.0f && event.getEntity() instanceof LivingEntity && ((LivingEntity)event.getEntity()).getItemBySlot(EquipmentSlot.FEET).getItem() instanceof WarlockRobesItem) {
             Vec3 diff = new Vec3(1, 1, 1).subtract(event.getStuckMultiplier()).scale(0.5);
             event.setStuckMultiplier(new Vec3(1, 1, 1).subtract(diff));
+        }
+    }
+
+    @SubscribeEvent
+    public void rightClick(PlayerInteractEvent.RightClickBlock event) {
+        if (event.getEntityLiving() instanceof Player player) {
+            ItemStack stack = player.getItemInHand(InteractionHand.MAIN_HAND);
+            BlockState state = event.getWorld().getBlockState(event.getPos());
+            if (
+                    stack.is(Registry.CRIMSON_ESSENCE.get())
+                            && KnowledgeUtil.knowsSign(player, Signs.BLOOD_SIGN)
+                            && !KnowledgeUtil.knowsRune(player, Runes.find(new ResourceLocation(Eidolon.MODID, "crimson_rose")))
+            ) {
+                if (state.getBlock().equals(Blocks.WITHER_ROSE)) {
+                    stack.shrink(1);
+                    if (event.getWorld().isClientSide) player.swing(InteractionHand.MAIN_HAND);
+                    event.getWorld().destroyBlock(event.getPos(), false);
+                    KnowledgeUtil.grantRune(player, Runes.find(new ResourceLocation(Eidolon.MODID, "crimson_rose")));
+                }
+                if (state.getBlock().equals(Blocks.ROSE_BUSH)) {
+                    stack.shrink(1);
+                    if (event.getWorld().isClientSide) player.swing(InteractionHand.MAIN_HAND);
+                    if (state.getValue(DoublePlantBlock.HALF) == DoubleBlockHalf.UPPER) {
+                        event.getWorld().destroyBlock(event.getPos().below(), false);
+                        KnowledgeUtil.grantRune(player, Runes.find(new ResourceLocation(Eidolon.MODID, "crimson_rose")));
+                    }
+                    else {
+                        event.getWorld().destroyBlock(event.getPos(), false);
+                        KnowledgeUtil.grantRune(player, Runes.find(new ResourceLocation(Eidolon.MODID, "crimson_rose")));
+                    }
+                }
+            }
         }
     }
 }

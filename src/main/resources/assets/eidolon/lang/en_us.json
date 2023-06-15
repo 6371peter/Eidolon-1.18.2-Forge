@@ -26,6 +26,7 @@
   "lore.eidolon.withered_heart": "It feels hollow in your hand.",
   "lore.eidolon.grape_candy": "Grim Grape",
   "lore.eidolon.red_candy": "Reaping Raspberry",
+  "lore.eidolon.enervating_ring": " ",
 
   "item.eidolon.lead_ingot": "Lead Ingot",
   "item.eidolon.raw_lead": "Raw Lead",
@@ -301,11 +302,15 @@
   "eidolon.tooltip.necrotic": "Necrotic",
   "eidolon.tooltip.active_summon": "Selected: ",
   "eidolon.tooltip.no_selected_summon": "None",
+  "eidolon.tooltip.athame_soul": "Soul: ",
+  "eidolon.tooltip.athame_soul_count": "Count: ",
 
   "eidolon.title.new_fact": "Acquired new knowledge",
   "eidolon.title.new_sign": "Unlocked: %s Sign",
   "eidolon.title.new_research": "Learned about %s",
   "eidolon.title.new_rune": "Unlocked: %s Rune",
+  "eidolon.title.miss_wicked_sign": "Miss Knowledge: Wicked Sign",
+  "eidolon.title.miss_sacred_sign": "Miss Knowledge: Sacred Sign",
   "eidolon.sign.wicked": "Wicked",
   "eidolon.sign.sacred": "Sacred",
   "eidolon.sign.blood": "Blood",
@@ -314,7 +319,9 @@
   "eidolon.sign.flame": "Flame",
 
   "eidolon.rune.sin": "Sin",
+  "eidolon.rune.holy": "Holy",
   "eidolon.rune.crimson_rose": "Crimson Rose",
+  "eidolon.rune.soul": "Soul",
 
   "eidolon.codex.chant_hover": "Chant",
   "eidolon.codex.cancel_hover": "Clear",
@@ -583,5 +590,7 @@
   
   "eidolon.codex.rune.sin": "A vile and wicked sigil. Adds one Wicked sign to the end of the spell.",
   "eidolon.codex.rune.crimson_rose": "Thrives upon bloodshed. Consumes two Wicked signs from the end of the spell, and adds one Blood sign in their place.",
+  "eidolon.codex.rune.holy": "A holy sigil.Add one Sacred sign to the end of the spell.",
+  "eidolon.codex.rune.soul": "Consumes a Wicked Sign and a Sacred Sign from the end of the spell, and adds one Soul sign in their place. ",
   "eidolon.codex.category.runes": "Runecraft"
 }

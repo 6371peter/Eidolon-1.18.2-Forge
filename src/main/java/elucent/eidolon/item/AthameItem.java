@@ -1,10 +1,16 @@
 package elucent.eidolon.item;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import elucent.eidolon.Eidolon;
 import elucent.eidolon.Registry;
+import elucent.eidolon.particle.Particles;
+import elucent.eidolon.spell.Runes;
+import elucent.eidolon.spell.Signs;
+import elucent.eidolon.util.KnowledgeUtil;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DoublePlantBlock;
@@ -36,11 +42,10 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.LootingLevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-
-import java.util.Random;
 
 public class AthameItem extends SwordItem {
 	private Random random = new Random();
@@ -65,6 +70,26 @@ public class AthameItem extends SwordItem {
         }
     }
 
+    @SubscribeEvent
+    public void onDeath(LivingDropsEvent event) {
+        if (event.getSource().getEntity() instanceof LivingEntity
+                && ((LivingEntity)event.getSource().getEntity()).getMainHandItem().getItem() instanceof AthameItem) {
+            ItemStack stack = ((LivingEntity) event.getSource().getEntity()).getMainHandItem();
+            if (stack.hasTag()
+                    && stack.getTag().contains("mob_soul")
+                    && stack.getTag().contains("mob_soul_count")
+                    && stack.getTag().getInt("mob_soul_count") < 5) {
+                String entity = event.getEntity().getEncodeId();
+                if (Objects.equals(entity, stack.getTag().getString("mob_soul"))) {
+                    event.getDrops().clear();
+                    stack.getTag().putInt("mob_soul_count", stack.getTag().getInt("mob_soul_count") + 1);
+                    Player source = (Player) event.getSource().getEntity();
+                    if (source.level.isClientSide()) source.playSound(SoundEvents.PLAYER_LEVELUP,1.0f, 1.0f);
+                }
+            }
+        }
+    }
+
     String loreTag = null;
 
     public Item setLore(String tag) {
@@ -78,6 +103,43 @@ public class AthameItem extends SwordItem {
         if (this.loreTag != null) {
             tooltip.add(new TextComponent(""));
             tooltip.add(new TextComponent("" + ChatFormatting.DARK_PURPLE + ChatFormatting.ITALIC + I18n.get(this.loreTag)));
+        }
+        if (stack.hasTag() && stack.getTag().contains("mob_soul") && stack.getTag().contains("mob_soul_count")) {
+            String soul = stack.getTag().getString("mob_soul");
+            ResourceLocation id = new ResourceLocation(soul);
+            String name = "entity." + id.getNamespace() + "." + id.getPath();
+            int soul_count = stack.getTag().getInt("mob_soul_count");
+            tooltip.add(new TranslatableComponent("eidolon.tooltip.athame_soul").append(
+                    new TranslatableComponent(name).withStyle(ChatFormatting.DARK_PURPLE)
+            ));
+            tooltip.add(new TranslatableComponent("eidolon.tooltip.athame_soul_count").append(
+                    new TranslatableComponent(String.valueOf(soul_count) + "/5").withStyle(ChatFormatting.GOLD)
+            ));
+        }
+    }
+
+    @Override
+    public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
+        super.inventoryTick(stack, world, entity, slot, selected);
+        if (!world.isClientSide
+                && stack.hasTag()
+                && stack.getTag().contains("mob_soul")
+                && stack.getTag().contains("mob_soul_count")
+                && stack.getTag().getInt("mob_soul_count") == 5
+                && entity instanceof Player
+                && KnowledgeUtil.knowsSign((Player) entity, Signs.SOUL_SIGN)) {
+            stack.getTag().remove("mob_soul");
+            stack.getTag().remove("mob_soul_count");
+            KnowledgeUtil.grantRune(entity, Runes.find(new ResourceLocation(Eidolon.MODID, "soul")));
+        }
+        if (!world.isClientSide
+                && stack.hasTag()
+                && stack.getTag().contains("mob_soul")
+                && stack.getTag().contains("mob_soul_count")
+                && entity instanceof Player
+                && KnowledgeUtil.knowsRune((Player) entity, Runes.find(new ResourceLocation(Eidolon.MODID, "soul")))) {
+            stack.getTag().remove("mob_soul");
+            stack.getTag().remove("mob_soul_count");
         }
     }
 

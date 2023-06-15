@@ -35,33 +35,17 @@ public class PurifyRitual extends Ritual {
 
     @Override
     public RitualResult start(Level world, BlockPos pos) {
-        // Ritual Item Focus
         List<IRitualItemFocus> tiles = Ritual.getTilesWithinAABB(IRitualItemFocus.class, world, getSearchBounds(pos));
-        // If Focus has Codex,then get Focus block pos
-        // TODO:在对应位置显示粒子效果?
-        BlockPos blockPos = null;
-        if (!tiles.isEmpty()) for (int i = 0; i< tiles.size(); i++) {
-            ItemStack stack = tiles.get(i).provide();
-            if (stack.getItem() instanceof CodexItem) {
-                blockPos = ((BlockEntity)tiles.get(i)).getBlockPos();
-                break;
-            }
-        }
-
         List<PathfinderMob> purifiable = world.getEntitiesOfClass(PathfinderMob.class, Ritual.getDefaultBounds(pos), (entity) -> entity instanceof ZombieVillager || entity instanceof ZombifiedPiglin || entity instanceof Zoglin);
 
         if (purifiable.size() > 0 && !world.isClientSide) world.playSound(null, pos, SoundEvents.ZOMBIE_VILLAGER_CURE, SoundSource.PLAYERS, 1.0f, 1.0f);
         if (!world.isClientSide) for (PathfinderMob entity : purifiable) {
             if (entity instanceof ZombieVillager) {
-                if (!tiles.isEmpty() && Config.HOLY_RUNE.get()) for (int i = 0; i< tiles.size(); i++) {
+                if (!tiles.isEmpty()) for (int i = 0; i< tiles.size(); i++) {
                     ItemStack stack = tiles.get(i).provide();
                     if (stack.getItem() instanceof CodexItem) {
                         if (!stack.hasTag()) {
                             tiles.get(i).replace(CodexItem.withRune(stack.copy(), Runes.find(new ResourceLocation(Eidolon.MODID, "holy"))));
-                            /*
-                            ItemStack newStack = stack.copy();
-                            newStack.getOrCreateTag().putString("rune", "holy");
-                            tiles.get(i).replace(newStack);*/
                             break;
                         }
                     }

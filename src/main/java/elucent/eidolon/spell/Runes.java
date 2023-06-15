@@ -41,22 +41,17 @@ public class Runes {
 				return RuneResult.FAIL;
 			}
 		});
-		// Soul Rune
-		// TODO:更改名字
 		register(new Rune(new ResourceLocation(Eidolon.MODID, "soul")) {
 			@Override
 			public RuneResult doEffect(SignSequence seq) {
-				if (seq.removeRightmostN(Signs.WICKED_SIGN, 2)) {
-					seq.addRight(Signs.SOUL_SIGN);
-					return RuneResult.PASS;
+				if (seq.removeRightmostN(Signs.WICKED_SIGN, 1) && seq.removeLeftmostN(Signs.SACRED_SIGN, 1)) {
+						seq.addRight(Signs.SOUL_SIGN);
+						return RuneResult.PASS;
 				}
 				return RuneResult.FAIL;
 			}
 		});
-
-		// Holy Rune
-		// TODO:更改名字
-		if (Config.HOLY_RUNE.get()) register(new Rune(new ResourceLocation(Eidolon.MODID, "holy")) {
+		register(new Rune(new ResourceLocation(Eidolon.MODID, "holy")) {
 			@Override
 			public RuneResult doEffect(SignSequence seq) {
 				seq.addRight(Signs.SACRED_SIGN);

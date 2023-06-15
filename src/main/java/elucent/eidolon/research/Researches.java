@@ -19,6 +19,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 
 public class Researches {
     static Map<ResourceLocation, Research> researches = new HashMap<>();
@@ -74,5 +75,6 @@ public class Researches {
     	addTask(ResearchTask.XP::new);
     	addTask(ResearchTask.XP::new);
     	register(new Research(new ResourceLocation(Eidolon.MODID, "gluttony"), 5), EntityType.PIG);
+        register(new Research(new ResourceLocation(Eidolon.MODID, "diamond"), 8), Blocks.DIAMOND_BLOCK);
     }
 }

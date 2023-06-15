@@ -48,14 +48,10 @@ public class CodexItem extends ItemBase implements IManaRelatedItem {
             stack.getTag().remove("rune");
             Rune rune = Runes.find(loc);
             if (rune != null) {
-                // Unlock Sin Rune Need Player know Wicked Sign
-                // TODO:翻译文件更新
                 if (entity instanceof Player && rune == Runes.find(new ResourceLocation(Eidolon.MODID, "sin"))) {
                     if (KnowledgeUtil.knowsSign((Player) entity, Signs.WICKED_SIGN)) KnowledgeUtil.grantRune(entity, rune);
                     else ((ServerPlayer)entity).connection.send(new ClientboundSetActionBarTextPacket(new TranslatableComponent("eidolon.title.miss_wicked_sign")));
                 }
-                // Holy Rune Need Player Unlock SACRED Sign first
-                // TODO:翻译文件更新
                 if (entity instanceof Player && rune == Runes.find(new ResourceLocation(Eidolon.MODID, "holy"))) {
                     if (KnowledgeUtil.knowsSign((Player) entity, Signs.SACRED_SIGN)) KnowledgeUtil.grantRune(entity, rune);
                     else ((ServerPlayer)entity).connection.send(new ClientboundSetActionBarTextPacket(new TranslatableComponent("eidolon.title.miss_sacred_sign")));
