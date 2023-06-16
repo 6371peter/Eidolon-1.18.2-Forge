@@ -172,7 +172,7 @@
 ### 已知问题
 1. 地牢未加入
 2. 粒子效果与rubidium不兼容导致崩溃
-   * 解决方法:解决方法:在Rubidium配置中加入 mixin.features.particle=false
+   * 解决方法:在Rubidium配置中加入 mixin.features.particle=false
 3. Research Table快速移动研究笔记时背包多出一份假的研究笔记
 4. 虚空护符不生效(0.2.7遗留问题，终末之镜可正常抵挡所有弹射物)
 5. Research研究暂无任何效果
