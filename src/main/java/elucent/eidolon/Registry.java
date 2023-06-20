@@ -201,27 +201,17 @@ import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryObject;
 
 public class Registry {
-    public static final TagKey<Item> INGOTS_LEAD = TagKey.create(net.minecraft.core.Registry.ITEM_REGISTRY,
-            new ResourceLocation("forge", "ingots/lead"));
-    public static final TagKey<Item> INGOTS_PEWTER = TagKey.create(net.minecraft.core.Registry.ITEM_REGISTRY,
-            new ResourceLocation("forge", "ingots/pewter"));
-    public static final TagKey<Item> INGOTS_ARCANE_GOLD = TagKey.create(net.minecraft.core.Registry.ITEM_REGISTRY,
-            new ResourceLocation("forge", "ingots/arcane_gold"));
-    public static final TagKey<Item> INGOTS_SILVER = TagKey.create(net.minecraft.core.Registry.ITEM_REGISTRY,
-            new ResourceLocation("forge", "ingots/silver"));
-    public static final TagKey<Item> GEMS_SHADOW = TagKey.create(net.minecraft.core.Registry.ITEM_REGISTRY,
-            new ResourceLocation("forge", "gems/shadow_gem"));
-    public static final TagKey<Item> RAW_MATERIALS_LEAD = TagKey.create(net.minecraft.core.Registry.ITEM_REGISTRY,
-            new ResourceLocation("forge", "raw_materials/lead"));
-    public static final TagKey<Item> RAW_MATERIALS_SILVER = TagKey.create(net.minecraft.core.Registry.ITEM_REGISTRY,
-            new ResourceLocation("forge", "raw_materials/silver"));
-    public static final TagKey<Item> ORES_LEAD = TagKey.create(net.minecraft.core.Registry.ITEM_REGISTRY,
-            new ResourceLocation("forge", "ores/lead"));
-    public static final TagKey<Item> ORES_SILVER = TagKey.create(net.minecraft.core.Registry.ITEM_REGISTRY,
-            new ResourceLocation("forge", "ores/silver"));
-    
-    static Map<String, Block> BLOCK_MAP = new HashMap<>();
-    static Map<String, Item> ITEM_MAP = new HashMap<>();
+    public static TagKey<Item>
+        INGOTS_LEAD = ItemTags.create(new ResourceLocation("forge", "ingots/lead")),
+        INGOTS_PEWTER = ItemTags.create(new ResourceLocation("forge", "ingots/pewter")),
+        INGOTS_ARCANE_GOLD = ItemTags.create(new ResourceLocation("forge", "ingots/arcane_gold")),
+        INGOTS_SILVER = ItemTags.create(new ResourceLocation("forge", "ingots/silver")),
+        GEMS_SHADOW = ItemTags.create(new ResourceLocation("forge", "gems/shadow_gem")),
+        RAW_MATERIALS_LEAD = ItemTags.create(new ResourceLocation("forge", "raw_materials/lead")),
+        RAW_MATERIALS_SILVER = ItemTags.create(new ResourceLocation("forge", "raw_materials/silver")),
+        ORES_LEAD = ItemTags.create(new ResourceLocation("forge", "ores/lead")),
+        ORES_SILVER = ItemTags.create(new ResourceLocation("forge", "ores/silver"));
+
     static DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, Eidolon.MODID);
     static DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, Eidolon.MODID);
     static DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITIES, Eidolon.MODID);
@@ -237,8 +227,7 @@ public class Registry {
             .create(ForgeRegistries.RECIPE_SERIALIZERS, Eidolon.MODID);
     static DeferredRegister<Attribute> ATTRIBUTES = DeferredRegister.create(ForgeRegistries.ATTRIBUTES, Eidolon.MODID);
 
-    public static final TagKey<Item> ZOMBIE_FOOD_TAG = TagKey.create(net.minecraft.core.Registry.ITEM_REGISTRY,
-            new ResourceLocation(Eidolon.MODID, "zombie_food"));
+    public static final TagKey<Item> ZOMBIE_FOOD_TAG = ItemTags.create( new ResourceLocation(Eidolon.MODID, "zombie_food"));
 
     public static Item.Properties itemProps() {
         return new Item.Properties().tab(Eidolon.TAB);
