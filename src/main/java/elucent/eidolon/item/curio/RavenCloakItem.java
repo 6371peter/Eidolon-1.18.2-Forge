@@ -33,7 +33,7 @@ public class RavenCloakItem extends ItemBase implements IWingsItem {
 
     @SubscribeEvent
     public static void onFall(LivingFallEvent event) {
-        if (CuriosApi.getCuriosHelper().findEquippedCurio(Registry.GRAVITY_BELT.get(), event.getEntityLiving()).isPresent()) {
+        if (CuriosApi.getCuriosHelper().findEquippedCurio(Registry.RAVEN_CLOAK.get(), event.getEntityLiving()).isPresent()) {
             event.setDistance(event.getDistance() / 4);
         }
     }
