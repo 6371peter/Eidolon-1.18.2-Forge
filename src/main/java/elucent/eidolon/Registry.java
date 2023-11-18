@@ -126,6 +126,7 @@ import elucent.eidolon.tile.SoulEnchanterTileRenderer;
 import elucent.eidolon.tile.WoodenStandTileEntity;
 import elucent.eidolon.tile.reagent.CisternTileEntity;
 import elucent.eidolon.tile.reagent.PipeTileEntity;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -227,6 +228,7 @@ public class Registry {
     static DeferredRegister<Attribute> ATTRIBUTES = DeferredRegister.create(ForgeRegistries.ATTRIBUTES, Eidolon.MODID);
 
     public static final TagKey<Item> ZOMBIE_FOOD_TAG = ItemTags.create( new ResourceLocation(Eidolon.MODID, "zombie_food"));
+    public static final TagKey<Block> CRUCIBLE_HOT_BLOCK_TAG = BlockTags.create(new ResourceLocation((Eidolon.MODID), "crucible_hot_block"));
 
     public static Item.Properties itemProps() {
         return new Item.Properties().tab(Eidolon.TAB);

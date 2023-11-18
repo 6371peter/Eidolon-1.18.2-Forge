@@ -91,12 +91,16 @@ public class CrucibleTileEntity extends TileEntityBase {
     }
 
     public static Predicate<?>[] HOT_BLOCKS = {
+            /*
         (BlockState b) -> b.getBlock() == Blocks.MAGMA_BLOCK,
         (BlockState b) -> b.getBlock() == Blocks.FIRE,
         (BlockState b) -> b.getBlock() == Blocks.SOUL_FIRE,
         (BlockState b) -> b.getBlock() == Blocks.LAVA,
         (BlockState b) -> b.getBlock() == Blocks.CAMPFIRE && b.getValue(CampfireBlock.LIT),
-        (BlockState b) -> b.getBlock() == Blocks.SOUL_CAMPFIRE && b.getValue(CampfireBlock.LIT)
+        (BlockState b) -> b.getBlock() == Blocks.SOUL_CAMPFIRE && b.getValue(CampfireBlock.LIT),
+             */
+            (BlockState b) -> b.getBlock() instanceof CampfireBlock && b.hasProperty(CampfireBlock.LIT) && b.getValue(CampfireBlock.LIT),
+            (BlockState b) -> b.is(Registry.CRUCIBLE_HOT_BLOCK_TAG)
     };
 
     public CrucibleTileEntity(BlockPos pos, BlockState state) {
