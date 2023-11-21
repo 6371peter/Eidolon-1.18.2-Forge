@@ -37,6 +37,7 @@ import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fml.DistExecutor;
+import org.jetbrains.annotations.NotNull;
 
 public class ResearchTableContainer extends AbstractContainerMenu implements ContainerListener {
     private final Container tile;
@@ -131,50 +132,62 @@ public class ResearchTableContainer extends AbstractContainerMenu implements Con
         return this.tile.stillValid(playerIn);
     }
 
-    public ItemStack quickMoveStack(Player playerIn, int index) {
+    // Code from Eidolon-Repraised
+    public @NotNull ItemStack quickMoveStack(@NotNull Player playerIn, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.slots.get(index);
-        if (slot != null && slot.hasItem()) {
-            ItemStack stack = slot.getItem().copy();
+
+        if (slot.hasItem()) {
+            ItemStack itemstack1 = slot.getItem();
+            itemstack = itemstack1.copy();
             if ((index < 0 || (index > 2 && index < 38))) {
-                if (this.slots.get(0).mayPlace(stack)) {
-                    if (!this.moveItemStackTo(stack, 0, 1, false)) {
+
+                boolean placeInExtraSlots = false;
+                for (int extra = 38; extra < slots.size(); extra++) {
+                    placeInExtraSlots = placeInExtraSlots || this.slots.get(extra).mayPlace(itemstack1);
+                }
+                if (placeInExtraSlots) {
+                    if (!this.moveItemStackTo(itemstack1, 38, slots.size(), false)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (this.slots.get(1).mayPlace(stack)) {
-                    if (!this.moveItemStackTo(stack, 1, 2, false)) {
+                } else if (this.slots.get(0).mayPlace(itemstack1)) {
+                    if (!this.moveItemStackTo(itemstack1, 0, 1, false)) {
+                        return ItemStack.EMPTY;
+                    }
+                } else if (this.slots.get(1).mayPlace(itemstack1)) {
+                    if (!this.moveItemStackTo(itemstack1, 1, 2, false)) {
                         return ItemStack.EMPTY;
                     }
                 } else if (index >= 2 && index < 29) {
-                    if (!this.moveItemStackTo(stack, 29, 38, false)) {
+                    if (!this.moveItemStackTo(itemstack1, 29, 38, false)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (index >= 29 && index < 38) {
-                    if (!this.moveItemStackTo(stack, 2, 29, false)) {
+                } else if (index >= 29) {
+                    if (!this.moveItemStackTo(itemstack1, 2, 29, false)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (!this.moveItemStackTo(stack, 2, 38, false)) {
+                } else if (!this.moveItemStackTo(itemstack1, 2, 38, false)) {
                     return ItemStack.EMPTY;
                 }
             } else {
-                if (!this.moveItemStackTo(stack, 2, 38, true)) {
+                if (!this.moveItemStackTo(itemstack1, 2, 38, true)) {
                     return ItemStack.EMPTY;
                 }
 
-                slot.onQuickCraft(stack, itemstack);
+                slot.onQuickCraft(itemstack1, itemstack);
             }
 
-            if (stack.isEmpty()) {
+            if (itemstack1.isEmpty()) {
                 slot.set(ItemStack.EMPTY);
             } else {
                 slot.setChanged();
             }
 
-            if (stack.getCount() == itemstack.getCount()) {
+            if (itemstack1.getCount() == itemstack.getCount()) {
                 return ItemStack.EMPTY;
             }
 
-            slot.onTake(playerIn, stack);
+            slot.onTake(playerIn, itemstack1);
         }
 
         return itemstack;

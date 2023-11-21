@@ -8,7 +8,7 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Method;
 
-// 这部分代码来自 Create Enchantment Industry 中 EnchantmentLevelUtil.java
+// Code from Create Enchantment Industry
 public class EnchantmentLevelUtil {
     private static final MethodHandle getMaxLevel;
 
