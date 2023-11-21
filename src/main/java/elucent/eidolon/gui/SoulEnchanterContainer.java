@@ -9,7 +9,9 @@ import java.util.Random;
 
 import com.google.common.collect.Lists;
 
+import elucent.eidolon.Config;
 import elucent.eidolon.Registry;
+import elucent.eidolon.util.EnchantmentLevelUtil;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
@@ -248,12 +250,20 @@ public class SoulEnchanterContainer extends AbstractContainerMenu {
         Map<Enchantment, Integer> existing = EnchantmentHelper.getEnchantments(stack);
         List<Enchantment> valid = Lists.newArrayList(ForgeRegistries.ENCHANTMENTS.getValues());
         valid.removeIf((ench) -> {
-            boolean canApply = ench.canEnchant(finalTest) ||
-                finalTest.getItem() == Items.BOOK && ench.isAllowedOnBooks();
-            return !canApply
-                || ench.isTreasureOnly()
-                || existing.containsKey(ench) && existing.get(ench) >= ench.getMaxLevel()
-                || ench.isCurse();
+            boolean canApply = ench.canEnchant(finalTest) || finalTest.getItem() == Items.BOOK && ench.isAllowedOnBooks();
+            if (Config.SOUL_ENCHANTER_ENHANCE.get()) {
+                boolean config = existing.containsKey(ench) && existing.get(ench) >= EnchantmentLevelUtil.getMaxLevel(ench);
+                return !canApply
+                        || ench.isTreasureOnly()
+                        || config
+                        || ench.isCurse();
+            } else {
+                boolean config = existing.containsKey(ench) && existing.get(ench) >= ench.getMaxLevel();
+                return !canApply
+                        || ench.isTreasureOnly()
+                        || config
+                        || ench.isCurse();
+            }
         });
 
         for (Map.Entry<Enchantment, Integer> e : existing.entrySet()) {

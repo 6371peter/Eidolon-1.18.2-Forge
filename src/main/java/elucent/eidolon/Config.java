@@ -20,6 +20,9 @@ public class Config {
     public static ConfigValue<Boolean> LEAD_ENABLED, SILVER_ENABLED,
         LAB_ENABLED, STRAY_TOWER_ENABLED, CATACOMB_ENABLED;
 
+    // Unofficial Experimental Settings
+    public static ConfigValue<Boolean> SOUL_ENCHANTER_ENHANCE;
+
     public Config(ForgeConfigSpec.Builder builder) {
         builder.comment("Generic settings").push("generic");
         CRUCIBLE_STEP_DURATION = builder.comment("Duration in ticks of each step of a crucible recipe.")
@@ -74,6 +77,11 @@ public class Config {
             .define("catacombEnabled", true);
         CATACOMB_RARITY = builder.comment("Rarity of the catacomb structure. Higher numbers mean rarer structures.")
             .defineInRange("catacombRarity", 3.0f, 1.0f, 1000f);
+        builder.pop();
+
+        builder.comment("Unofficial Experimental Settings").push("experimental");
+        SOUL_ENCHANTER_ENHANCE = builder.comment("Automatic adaptation with Apotheosis Enchantment Module enchantments max level increased.")
+                .define("soulEnchanterEnhance", false);
         builder.pop();
     }
 
