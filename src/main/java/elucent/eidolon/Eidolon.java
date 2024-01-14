@@ -23,7 +23,7 @@ import elucent.eidolon.tile.NecroticFocusTileRenderer;
 import elucent.eidolon.tile.SoulEnchanterTileRenderer;
 import elucent.eidolon.tile.reagent.CisternTileRenderer;
 import elucent.eidolon.tile.reagent.PipeTileRenderer;
-// import elucent.eidolon.world.WorldGen;
+import elucent.eidolon.world.WorldGen;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
@@ -88,12 +88,11 @@ public class Eidolon {
         Registry.init();
         proxy.init();
 
-        /*
         MinecraftForge.EVENT_BUS.register(new WorldGen());
         WorldGen.preInit();
         WorldGen.init();
         FMLJavaModLoadingContext.get().getModEventBus().register(new WorldGen());
-         */
+
 
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(new Events());

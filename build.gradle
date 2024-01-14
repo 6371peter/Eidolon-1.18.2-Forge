@@ -22,7 +22,7 @@ apply plugin: 'org.parchmentmc.librarian.forgegradle'
 apply plugin: 'org.spongepowered.mixin'
 
 
-version = '0.3a'
+version = '0.3b'
 group = 'elucent.eidolon'
 archivesBaseName = 'eidolon'
 
@@ -125,7 +125,7 @@ repositories {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.18.2-40.2.9'
+    minecraft 'net.minecraftforge:forge:1.18.2-40.2.17'
 
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 

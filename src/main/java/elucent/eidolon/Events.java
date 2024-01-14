@@ -380,7 +380,7 @@ public class Events {
 
     @SubscribeEvent
     public void rightClick(PlayerInteractEvent.RightClickBlock event) {
-        if (event.getEntityLiving() instanceof Player player) {
+        if (event.getEntityLiving() instanceof Player player && event.getHand() == InteractionHand.MAIN_HAND) {
             ItemStack stack = player.getItemInHand(InteractionHand.MAIN_HAND);
             BlockState state = event.getWorld().getBlockState(event.getPos());
             if (

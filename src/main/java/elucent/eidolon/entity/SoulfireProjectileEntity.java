@@ -18,6 +18,9 @@ public class SoulfireProjectileEntity extends SpellProjectileEntity {
     public SoulfireProjectileEntity(EntityType<?> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
     }
+    public SoulfireProjectileEntity(EntityType<?> entityTypeIn, Level worldIn, Float damage) {
+        super(entityTypeIn, worldIn, damage);
+    }
 
     @Override
     public void tick() {
@@ -47,7 +50,8 @@ public class SoulfireProjectileEntity extends SpellProjectileEntity {
 
     @Override
     protected void onImpact(HitResult ray, Entity target) {
-        target.hurt(DamageSource.indirectMagic(this, level.getPlayerByUUID(casterId)), 7.0f);
+        if (damage != null) target.hurt(DamageSource.indirectMagic(this, level.getPlayerByUUID(casterId)), damage);
+        else target.hurt(DamageSource.indirectMagic(this, level.getPlayerByUUID(casterId)), 7.0f);
         onImpact(ray);
     }
 

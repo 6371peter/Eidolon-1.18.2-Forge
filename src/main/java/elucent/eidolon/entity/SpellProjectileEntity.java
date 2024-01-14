@@ -15,9 +15,15 @@ import net.minecraft.world.level.Level;
 
 public abstract class SpellProjectileEntity extends Entity {
     UUID casterId = null;
+    Float damage;
 
     public SpellProjectileEntity(EntityType<?> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
+    }
+
+    public SpellProjectileEntity(EntityType<?> entityTypeIn, Level worldIn, Float damage) {
+        super(entityTypeIn, worldIn);
+        this.damage = damage;
     }
 
     public Entity shoot(double x, double y, double z, double vx, double vy, double vz, UUID caster) {

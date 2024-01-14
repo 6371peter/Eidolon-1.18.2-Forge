@@ -13,6 +13,8 @@ import elucent.eidolon.network.Networking;
 import elucent.eidolon.particle.Particles;
 import elucent.eidolon.recipe.CrucibleRecipe;
 import elucent.eidolon.recipe.CrucibleRegistry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CampfireBlock;
@@ -31,6 +33,8 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.core.BlockPos;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class CrucibleTileEntity extends TileEntityBase {
     boolean boiling = false;
@@ -135,13 +139,33 @@ public class CrucibleTileEntity extends TileEntityBase {
                 return InteractionResult.SUCCESS;
             }
             if (player.getItemInHand(hand).getItem() == Items.WATER_BUCKET) {
-                player.setItemInHand(hand, new ItemStack(Items.BUCKET));
+                if (!player.isCreative()) player.setItemInHand(hand, new ItemStack(Items.BUCKET));
                 if (!level.isClientSide) {
                     hasWater = true;
                     sync();
                     level.playSound(null, pos, SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 1.0f, 1.0f);
                 }
                 return InteractionResult.SUCCESS;
+            }
+            if (ModList.get().isLoaded("enigmaticlegacy") || ModList.get().isLoaded("projecte")) {
+                Item unholy_grail = ForgeRegistries.ITEMS.getValue(new ResourceLocation("enigmaticlegacy:unholy_grail"));
+                Item evertide_amulet = ForgeRegistries.ITEMS.getValue(new ResourceLocation("projecte:evertide_amulet"));
+                if (unholy_grail != null && player.getItemInHand(hand).getItem() == unholy_grail) {
+                    if (!level.isClientSide) {
+                        hasWater = true;
+                        sync();
+                        level.playSound(null, pos, SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 1.0f, 1.0f);
+                        return InteractionResult.SUCCESS;
+                    }
+                }
+                if (evertide_amulet != null && player.getItemInHand(hand).getItem() == evertide_amulet) {
+                    if (!level.isClientSide) {
+                        hasWater = true;
+                        sync();
+                        level.playSound(null, pos, SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 1.0f, 1.0f);
+                        return InteractionResult.SUCCESS;
+                    }
+                }
             }
         }
         return InteractionResult.PASS;

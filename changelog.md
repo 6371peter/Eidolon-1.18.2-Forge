@@ -1,3 +1,18 @@
+# 0.3b改动内容
+## 1.18.2-0.3a -> 1.18.2-0.3b改动
+1. 添加了块激活信标的tag
+2. 乌鸦斗篷现在可以减少掉落伤害了
+3. 坩埚下方用于加热的块现在采用数据包控制(eidolon:blocks/crucible_hot_block)
+4. 清理了无用的研究
+5. 灵魂生命值可以通过配置取消显示
+6. 魂火法杖伤害修改
+7. 灵歌附魔台通过配置可以出现Apotheosis提升后的附魔等级.(代码来自Create Enchantment Industry，可通过配置启用，默认关闭)
+8. 修复了研究台快速移动问题(代码来自https://github.com/Alexthw46/Eidolon-Repraised/tree/1.20.1-Neo)
+9. 添加了结构(代码来自https://github.com/TT432/eidolon/tree/1.18.2-updating)
+    * StrayTower
+    * Lab
+    * Catacomb
+
 # 0.3a改动内容
 ## 1.16.5-0.2.7 -> 1.18.2-0.3a改动
 ### 物品/块变化
@@ -173,7 +188,7 @@
 1. 地牢未加入
 2. 粒子效果与rubidium不兼容导致崩溃
    * 解决方法:在Rubidium配置中加入 mixin.features.particle=false
-3. Research Table快速移动研究笔记时背包多出一份假的研究笔记
+3. Research Table快速移动研究笔记时背包多出一份假的研究笔记(0.3b修复)
 4. Research研究暂无任何效果
 5. 衰弱之戒无任何效果
 6. 乌鸦斗篷可能应当拥有摔落伤害减少效果
@@ -182,3 +197,4 @@
 9. 火焰符文无内容
 10. Max Soul Health[最大灵魂生命值] 无法正常设置
 11. 术士套部分效果未能实现(0.2.7遗留问题)
+12. 指令部分无法将指令正常发送给客户端
