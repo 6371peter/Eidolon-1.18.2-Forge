@@ -11,7 +11,7 @@ import com.google.common.collect.Lists;
 
 import elucent.eidolon.Config;
 import elucent.eidolon.Registry;
-import elucent.eidolon.util.EnchantmentLevelUtil;
+import elucent.eidolon.compat.apotheosis.EnchantUtil;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
@@ -39,6 +39,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class SoulEnchanterContainer extends AbstractContainerMenu {
@@ -54,6 +55,7 @@ public class SoulEnchanterContainer extends AbstractContainerMenu {
     private final DataSlot xpSeed = DataSlot.standalone();
     public final int[] enchantClue = new int[]{-1, -1, -1};
     public final int[] worldClue = new int[]{-1, -1, -1};
+    public float power = 0;
 
     public SoulEnchanterContainer(int id, Inventory playerInventory) {
         this(id, playerInventory, ContainerLevelAccess.NULL);
@@ -107,9 +109,13 @@ public class SoulEnchanterContainer extends AbstractContainerMenu {
             ItemStack itemstack = inventoryIn.getItem(0);
             if (!itemstack.isEmpty() && (itemstack.isEnchantable() || itemstack.isEnchanted() || itemstack.getItem() == Items.ENCHANTED_BOOK)) {
                 this.worldPosCallable.execute((world, pos) -> {
-                    int power = 0;
 
-                    for(int k = -1; k <= 1; ++k) {
+                    this.power = 0;
+
+                    if (ModList.get().isLoaded("apotheosis")) {
+                        power = (float) Math.floor(EnchantUtil.getEthereal(world, pos) * 2);
+                    }
+                    else for(int k = -1; k <= 1; ++k) {
                         for(int l = -1; l <= 1; ++l) {
                             if ((k != 0 || l != 0) && world.isEmptyBlock(pos.offset(l, 0, k)) && world.isEmptyBlock(pos.offset(l, 1, k))) {
                                 power += getPower(world, pos.offset(l * 2, 0, k * 2));
@@ -144,6 +150,7 @@ public class SoulEnchanterContainer extends AbstractContainerMenu {
                     this.broadcastChanges();
                 });
             } else {
+                this.power = 0;
                 for(int i = 0; i < 3; ++i) {
                     this.enchantClue[i] = -1;
                     this.worldClue[i] = -1;
@@ -251,8 +258,8 @@ public class SoulEnchanterContainer extends AbstractContainerMenu {
         List<Enchantment> valid = Lists.newArrayList(ForgeRegistries.ENCHANTMENTS.getValues());
         valid.removeIf((ench) -> {
             boolean canApply = ench.canEnchant(finalTest) || finalTest.getItem() == Items.BOOK && ench.isAllowedOnBooks();
-            if (Config.SOUL_ENCHANTER_ENHANCE.get()) {
-                boolean config = existing.containsKey(ench) && existing.get(ench) >= EnchantmentLevelUtil.getMaxLevel(ench);
+            if (Config.SOUL_ENCHANTER_ENHANCE.get() && ModList.get().isLoaded("apotheosis")){
+                boolean config = existing.containsKey(ench) && existing.get(ench) >= EnchantUtil.enchantmentLevelToPower(ench, this.power, stack);
                 return !canApply
                         || ench.isTreasureOnly()
                         || config
