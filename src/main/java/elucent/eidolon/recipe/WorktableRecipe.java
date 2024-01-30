@@ -10,6 +10,8 @@ import com.google.gson.JsonSyntaxException;
 
 import elucent.eidolon.Eidolon;
 import elucent.eidolon.Registry;
+import elucent.eidolon.research.Research;
+import elucent.eidolon.research.Researches;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
@@ -27,11 +29,13 @@ public class WorktableRecipe implements Recipe<Container> {
     Ingredient[] core, extras;
     ItemStack result;
     ResourceLocation registryName;
+    String research;
 
-    public WorktableRecipe(Ingredient[] core, Ingredient[] extras, ItemStack result) {
+    public WorktableRecipe(Ingredient[] core, Ingredient[] extras, ItemStack result, String researches) {
         this.core = core;
         this.extras = extras;
         this.result = result;
+        this.research = researches;
     }
 
     public ResourceLocation getRegistryName() {
@@ -55,6 +59,7 @@ public class WorktableRecipe implements Recipe<Container> {
     public Ingredient[] getOuter() {
         return extras;
     }
+    public String getResearch() { return research; }
 
     public boolean matches(Container coreInv, Container extraInv) {
         if (coreInv.getContainerSize() < 9 || extraInv.getContainerSize() < 4) return false;
@@ -146,7 +151,11 @@ public class WorktableRecipe implements Recipe<Container> {
                 extras[i] = key.equals(" ") ? Ingredient.EMPTY : ingredientMap.get(key);
             }
             ItemStack result = CraftingHelper.getItemStack(json.getAsJsonObject("result"), true);
-            return WorktableRegistry.register(new WorktableRecipe(core, extras, result).setRegistryName(recipeId));
+            String research = null;
+            if (json.has("research")) {
+                research = json.get("research").getAsString();
+            }
+            return WorktableRegistry.register(new WorktableRecipe(core, extras, result, research).setRegistryName(recipeId));
         }
 
         @Override
@@ -155,7 +164,9 @@ public class WorktableRecipe implements Recipe<Container> {
             for (int i = 0; i < 9; i ++) core[i] = Ingredient.fromNetwork(buffer);
             for (int i = 0; i < 4; i ++) extras[i] = Ingredient.fromNetwork(buffer);
             ItemStack result = buffer.readItem();
-            return WorktableRegistry.register(new WorktableRecipe(core, extras, result).setRegistryName(recipeId));
+
+            String research = buffer.readUtf();
+            return WorktableRegistry.register(new WorktableRecipe(core, extras, result, research).setRegistryName(recipeId));
         }
 
         @Override
@@ -163,6 +174,8 @@ public class WorktableRecipe implements Recipe<Container> {
             for (int i = 0; i < 9; i ++) recipe.core[i].toNetwork(buffer);
             for (int i = 0; i < 4; i ++) recipe.extras[i].toNetwork(buffer);
             buffer.writeItem(recipe.result);
+
+            buffer.writeUtf(recipe.research);
         }
     }
 

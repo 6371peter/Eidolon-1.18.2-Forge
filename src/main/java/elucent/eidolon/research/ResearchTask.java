@@ -264,6 +264,10 @@ public abstract class ResearchTask {
 			levels = random.nextInt(1, 6); // 1-5 XP levels as cost
 		}
 
+		public XP(int level) {
+			levels = level;
+		}
+
 		@Override
 		public CompoundTag write() {
 			CompoundTag tag = new CompoundTag();
