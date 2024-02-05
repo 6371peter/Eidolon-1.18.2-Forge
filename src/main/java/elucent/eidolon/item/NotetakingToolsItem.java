@@ -45,21 +45,20 @@ public class NotetakingToolsItem extends ItemBase {
     public InteractionResult useOn(UseOnContext ctx) {
         BlockState state = ctx.getLevel().getBlockState(ctx.getClickedPos());
         Collection<Research> researches = Researches.getBlockResearches(state.getBlock());
-        if (researches != null) {
-        	researches.removeIf((r) -> KnowledgeUtil.knowsResearch(ctx.getPlayer(), r.getRegistryName()));
-        	if (!researches.isEmpty()) {
-        		Research r = researches.iterator().next();
-        		ItemStack notes = new ItemStack(Registry.RESEARCH_NOTES.get(), 1);
-        		notes.getOrCreateTag().putString("research", r.getRegistryName().toString());
-        		notes.getTag().putInt("stepsDone", 0);
-                ctx.getItemInHand().shrink(1);
-                if (ctx.getItemInHand().getCount() == 0) 
-                	ctx.getPlayer().setItemInHand(ctx.getHand(), ItemStack.EMPTY);
-                if (!ctx.getPlayer().getInventory().add(notes.copy())) {
-                    ctx.getPlayer().drop(notes, false);
-                 }
-                return InteractionResult.SUCCESS;
-        	}
+        // Why remove Know Researches?
+        // researches.removeIf((r) -> KnowledgeUtil.knowsResearch(ctx.getPlayer(), r.getRegistryName()));
+        if (researches != null && !researches.isEmpty()) {
+            Research r = researches.iterator().next();
+            ItemStack notes = new ItemStack(Registry.RESEARCH_NOTES.get(), 1);
+            notes.getOrCreateTag().putString("research", r.getRegistryName().toString());
+            notes.getTag().putInt("stepsDone", 0);
+            ctx.getItemInHand().shrink(1);
+            if (ctx.getItemInHand().getCount() == 0)
+                ctx.getPlayer().setItemInHand(ctx.getHand(), ItemStack.EMPTY);
+            if (!ctx.getPlayer().getInventory().add(notes.copy())) {
+                ctx.getPlayer().drop(notes, false);
+            }
+            return InteractionResult.SUCCESS;
         }
         return super.useOn(ctx);
     }
