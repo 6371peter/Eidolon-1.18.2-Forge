@@ -151,7 +151,7 @@ public class WorktableRecipe implements Recipe<Container> {
                 extras[i] = key.equals(" ") ? Ingredient.EMPTY : ingredientMap.get(key);
             }
             ItemStack result = CraftingHelper.getItemStack(json.getAsJsonObject("result"), true);
-            String research = null;
+            String research = "none";
             if (json.has("research")) {
                 research = json.get("research").getAsString();
             }

@@ -1,5 +1,6 @@
 package elucent.eidolon.gui;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import elucent.eidolon.Registry;
@@ -68,7 +69,7 @@ public class WorktableContainer extends AbstractContainerMenu {
             ItemStack itemstack = ItemStack.EMPTY;
             WorktableRecipe recipe = WorktableRegistry.find(core, extras);
             if (recipe != null) {
-                if (recipe.getResearch() == null || Researches.find(new ResourceLocation(recipe.getResearch())) == null) itemstack = recipe.getResult();
+                if (Objects.equals(recipe.getResearch(), "none") || Researches.find(new ResourceLocation(recipe.getResearch())) == null) itemstack = recipe.getResult();
                 else if (KnowledgeUtil.knowsResearch(player, new ResourceLocation(recipe.getResearch()))) itemstack = recipe.getResult();
             }
             else {
