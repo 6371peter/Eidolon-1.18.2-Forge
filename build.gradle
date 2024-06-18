@@ -22,7 +22,7 @@ apply plugin: 'org.parchmentmc.librarian.forgegradle'
 apply plugin: 'org.spongepowered.mixin'
 
 
-version = '0.3b'
+version = '0.3c'
 group = 'elucent.eidolon'
 archivesBaseName = 'eidolon'
 
