@@ -22,7 +22,7 @@ apply plugin: 'org.parchmentmc.librarian.forgegradle'
 apply plugin: 'org.spongepowered.mixin'
 
 
-version = '0.3c'
+version = '0.3b'
 group = 'elucent.eidolon'
 archivesBaseName = 'eidolon'
 
@@ -170,9 +170,6 @@ publishing {
     repositories {
         maven {
             url "file://${project.projectDir}/mcmodsrepo"
-        }
-        maven {
-            url "C://Users/75021/.m2/repository"
         }
     }
 }
