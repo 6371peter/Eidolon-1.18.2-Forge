@@ -100,6 +100,7 @@ import elucent.eidolon.potion.VulnerableEffect;
 import elucent.eidolon.reagent.Reagent;
 import elucent.eidolon.reagent.ReagentRegistry;
 import elucent.eidolon.recipe.CrucibleRecipe;
+import elucent.eidolon.recipe.SpellRecipe;
 import elucent.eidolon.recipe.WorktableRecipe;
 import elucent.eidolon.research.Research;
 import elucent.eidolon.ritual.AllureRitual;
@@ -741,6 +742,8 @@ public class Registry {
             .register("worktable", () -> new WorktableRecipe.Serializer());
     public static RegistryObject<RecipeSerializer<CrucibleRecipe>> CRUCIBLE_RECIPE = RECIPE_TYPES.register("crucible",
             () -> new CrucibleRecipe.Serializer());
+    public static RegistryObject<RecipeSerializer<SpellRecipe>> SPELL_RECIPE = RECIPE_TYPES
+            .register("spell", () -> new SpellRecipe.Serializer());
 
     public static RegistryObject<Attribute> MAX_SOUL_HEARTS = ATTRIBUTES.register("max_soul_hearts",
             () -> new RangedAttribute(Eidolon.MODID + ".max_soul_hearts", Config.MAX_ETHEREAL_HEALTH.get(), 0, 2000)

@@ -1,7 +1,6 @@
 package elucent.eidolon.spell;
 
 import java.util.List;
-import java.util.Map;
 
 import elucent.eidolon.Eidolon;
 import elucent.eidolon.Registry;
@@ -9,15 +8,15 @@ import elucent.eidolon.capability.IReputation;
 import elucent.eidolon.deity.Deities;
 import elucent.eidolon.network.MagicBurstEffectPacket;
 import elucent.eidolon.network.Networking;
+import elucent.eidolon.recipe.SpellRecipe;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TextColor;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.RecordItem;
 import net.minecraft.resources.ResourceLocation;
@@ -36,7 +35,6 @@ import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class DarkTouchSpell extends StaticSpell {
     public static final String NECROTIC_KEY = new ResourceLocation(Eidolon.MODID, "necrotic").toString();
@@ -95,13 +93,9 @@ public class DarkTouchSpell extends StaticSpell {
     }
 
     boolean canTouch(ItemStack stack) {
-        // Json
-        for (Map<String, ResourceLocation> map : SpellReloadListener.SPELL) {
-            ResourceLocation spell = map.get("spell");
-            if (!spell.equals(Spells.DARK_TOUCH.getRegistryName())) return false;
-            ResourceLocation input = map.get("input");
-            Item inputItem = ForgeRegistries.ITEMS.getValue(input);
-            if (inputItem != null && stack.getItem() == inputItem) return true;
+        // Recipe
+        for (SpellRecipe recipe : Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(SpellRecipe.Type.INSTANCE)) {
+            if (recipe.getSpell().equals(Spells.DARK_TOUCH) && recipe.matches(stack)) return true;
         }
         // DISC
         if (stack.getItem() instanceof RecordItem && stack.getItem() != Registry.PAROUSIA_DISC.get()) return true;
@@ -111,15 +105,10 @@ public class DarkTouchSpell extends StaticSpell {
     }
 
     ItemStack touchResult(ItemStack stack) {
-        for (Map<String, ResourceLocation> map : SpellReloadListener.SPELL) {
-            ResourceLocation spell = map.get("spell");
-            if (!spell.equals(Spells.DARK_TOUCH.getRegistryName())) return stack;
-            ResourceLocation input = map.get("input");
-            ResourceLocation output = map.get("output");
-            if (input != null && output != null) {
-                Item inputItem = ForgeRegistries.ITEMS.getValue(input);
-                Item outputItem = ForgeRegistries.ITEMS.getValue(output);
-                if (inputItem != null && stack.getItem() == inputItem) return new ItemStack(outputItem);
+        // Recipe
+        for (SpellRecipe recipe : Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(SpellRecipe.Type.INSTANCE)) {
+            if (recipe.getSpell().equals(Spells.DARK_TOUCH) && recipe.getInput().test(stack) && recipe.getOutput() != null) {
+                return new ItemStack(recipe.getResultItem().getItem());
             }
         }
         // DISC
@@ -127,7 +116,7 @@ public class DarkTouchSpell extends StaticSpell {
         // Tool create Necrotic tag
         else if (stack.isDamageableItem() && stack.getMaxStackSize() == 1) {
             stack.getOrCreateTag().putBoolean(NECROTIC_KEY, true);
-            return  stack;
+            return stack;
         }
         return stack;
     }

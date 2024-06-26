@@ -1,7 +1,10 @@
 {
+  "type": "eidolon:spell",
   "spell": "eidolon:dark_touch",
   "input": {
     "item":"eidolon:pewter_inlay"
   },
-  "output": "eidolon:unholy_symbol"
+  "output": {
+    "item": "eidolon:unholy_symbol"
+  }
 }

@@ -135,8 +135,10 @@ dependencies {
     compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:${mc_version}-${curiosVersion}:api")
     runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:${mc_version}-${curiosVersion}")
 
-    compileOnly fg.deobf("curse.maven:malum-484064:4368497")
-    compileOnly fg.deobf("curse.maven:lodestone-616457:4474744")
+    compileOnly fg.deobf("curse.maven:malum-484064:4631612")
+    compileOnly fg.deobf("curse.maven:lodestone-616457:4631609")
+    runtimeOnly fg.deobf("curse.maven:malum-484064:4631612")
+    runtimeOnly fg.deobf("curse.maven:lodestone-616457:4631609")
 
     compileOnly fg.deobf("curse.maven:apotheosis-313970:4634636")
     compileOnly fg.deobf("curse.maven:placebo-283644:4500363")
