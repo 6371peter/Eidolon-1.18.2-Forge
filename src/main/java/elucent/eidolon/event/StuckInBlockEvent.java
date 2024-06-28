@@ -3,7 +3,6 @@ package elucent.eidolon.event;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fml.event.IModBusEvent;
 
 public class StuckInBlockEvent extends net.minecraftforge.eventbus.api.Event {
     Entity entity;
